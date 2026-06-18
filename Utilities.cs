@@ -8,13 +8,12 @@ static class Utilities
         await client.SendMessageAsync(channel, message);
     }
     #endregion
-    //get values
-    //SELECT * FROM users WHERE id = ???;
 
-    //register user
-    //INSERT INTO users VALUES (?, ?, ?)
-
-    //update values
-    //UPDATE users SET ??? = ??? WHERE id = ???
+    #region sqlite
+    public static void CreateTableIfDoesntExist()
+    {
+        
+    }
+    #endregion
 }
 
