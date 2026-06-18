@@ -17,22 +17,12 @@ class Leveling(RestClient client, ILogger<Leveling> logger) : IMessageCreateGate
         long level = 0;
         long xp = 0;
 
-        Utilities.CreateTableIfDoesntExist("users", "id INTEGER PRIMARY KEY UNIQUE, level INTEGER NOT NULL, xp INTEGER NOT NULL");
-
-        #region check if user exists
-        SqliteDataReader userExistsReader = new SqliteCommand($"SELECT EXISTS(SELECT * FROM users WHERE id={message.Author.Id});", connection).ExecuteReader();
-        while (userExistsReader.Read())
-        {
-            bool exists = userExistsReader.GetBoolean(0);
-            if(!exists)
-            {
-                new SqliteCommand($"INSERT INTO users VALUES ({message.Author.Id}, 0, 0)", connection).ExecuteNonQuery();
-            }
-        }
-        #endregion
+        const string table = "users";
+        Utilities.CreateTableIfDoesntExist(table, columnsIfDoesntExist: "id INTEGER PRIMARY KEY UNIQUE, level INTEGER NOT NULL, xp INTEGER NOT NULL");
+        Utilities.CreateColumnIfDoesntExist(table, keyValuePair: new("id",message.Author.Id), valuesIfDoesntExist: $"{message.Author.Id}, 0, 0");
 
         #region read
-        SqliteDataReader infoReader = new SqliteCommand($"SELECT * FROM users WHERE id = {message.Author.Id}", connection).ExecuteReader();
+        SqliteDataReader infoReader = new SqliteCommand($"SELECT * FROM {table} WHERE id = {message.Author.Id}", connection).ExecuteReader();
         while (infoReader.Read())
         {
             level = infoReader.GetInt64(1);
@@ -52,8 +42,8 @@ class Leveling(RestClient client, ILogger<Leveling> logger) : IMessageCreateGate
         }
         
         #region write
-        new SqliteCommand($"UPDATE users SET xp = {xp} WHERE id = {message.Author.Id}", connection).ExecuteNonQuery();
-        new SqliteCommand($"UPDATE users SET level = {level} WHERE id = {message.Author.Id}", connection).ExecuteNonQuery();
+        new SqliteCommand($"UPDATE {table} SET xp = {xp} WHERE id = {message.Author.Id}", connection).ExecuteNonQuery();
+        new SqliteCommand($"UPDATE {table} SET level = {level} WHERE id = {message.Author.Id}", connection).ExecuteNonQuery();
         #endregion
 
         string debugMessage = $"usr{message.Author.Id}, lvl{level}, xp{xp}";
