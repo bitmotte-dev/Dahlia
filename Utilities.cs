@@ -1,3 +1,4 @@
+using Microsoft.Data.Sqlite;
 using NetCord.Rest;
 
 static class Utilities
@@ -10,9 +11,14 @@ static class Utilities
     #endregion
 
     #region sqlite
-    public static void CreateTableIfDoesntExist()
+    public static void CreateTableIfDoesntExist(string tableName, string columns)
     {
-        
+        SqliteConnection connection = new SqliteConnection("Data Source=/home/creature/Projects/coding/Dahlia/levels.db");
+        connection.Open();
+
+        new SqliteCommand($"CREATE TABLE IF NOT EXISTS {tableName} ({columns})", connection).ExecuteNonQuery();
+
+        connection.Close();
     }
     #endregion
 }

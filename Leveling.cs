@@ -17,16 +17,17 @@ class Leveling(RestClient client, ILogger<Leveling> logger) : IMessageCreateGate
         long level = 0;
         long xp = 0;
 
-        #region create table if doesn't exist
-
-        #endregion
+        Utilities.CreateTableIfDoesntExist("users", "id INTEGER PRIMARY KEY UNIQUE, level INTEGER NOT NULL, xp INTEGER NOT NULL");
 
         #region check if user exists
         SqliteDataReader userExistsReader = new SqliteCommand($"SELECT EXISTS(SELECT * FROM users WHERE id={message.Author.Id});", connection).ExecuteReader();
         while (userExistsReader.Read())
         {
             bool exists = userExistsReader.GetBoolean(0);
-            _ = Utilities.SendMessage(client, message.ChannelId, $"User exists in database ? {exists}");
+            if(!exists)
+            {
+                new SqliteCommand($"INSERT INTO users VALUES ({message.Author.Id}, 0, 0)", connection).ExecuteNonQuery();
+            }
         }
         #endregion
 
