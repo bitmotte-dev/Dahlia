@@ -8,8 +8,6 @@ static class Utilities
         await client.SendMessageAsync(channel, message);
     }
     #endregion
-
-    #region sqlite basics
     //get values
     //SELECT * FROM users WHERE id = ???;
 
@@ -18,6 +16,5 @@ static class Utilities
 
     //update values
     //UPDATE users SET ??? = ??? WHERE id = ???
-    #endregion
 }
 
