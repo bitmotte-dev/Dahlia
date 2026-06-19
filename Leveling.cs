@@ -11,6 +11,8 @@ class Leveling(RestClient client, ILogger<Leveling> logger) : IMessageCreateGate
     {
         if(message.Author.IsBot) {return default;}
 
+        logger.LogInformation(message.Content);
+
         SqliteConnection connection = new SqliteConnection("Data Source=/home/creature/Projects/coding/Dahlia/levels.db");
         connection.Open();
 
@@ -37,8 +39,10 @@ class Leveling(RestClient client, ILogger<Leveling> logger) : IMessageCreateGate
             xp = 0;
             level += 1;
 
+            const long activity_channel = 1504214992034070693;
             string levelUpMessage = $"<@{message.Author.Id}> Has reached level {level} !!";
-            _ = Utilities.SendMessage(client, message.ChannelId, levelUpMessage);
+            _ = Utilities.SendMessage(client, activity_channel, levelUpMessage);
+            logger.LogInformation(levelUpMessage);
         }
         
         #region write
@@ -47,7 +51,7 @@ class Leveling(RestClient client, ILogger<Leveling> logger) : IMessageCreateGate
         #endregion
 
         string debugMessage = $"usr{message.Author.Id}, lvl{level}, xp{xp}";
-        _ = Utilities.SendMessage(client, message.ChannelId, debugMessage);
+        logger.LogInformation(debugMessage);
         
         connection.Close();
         return default;
