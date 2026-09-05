@@ -12,7 +12,6 @@ static class Bot
         {
             options.Intents = GatewayIntents.GuildMessages | GatewayIntents.MessageContent;
         });
-        builder.Services.AddGatewayHandler(typeof(Leveling));
         
         var host = builder.Build();
         
