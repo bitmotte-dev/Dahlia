@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Dahlia.Leveling;
+using Microsoft.Extensions.Hosting;
 using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
+
+namespace Dahlia;
 
 static class Bot
 {
@@ -11,10 +14,12 @@ static class Bot
         builder.Services.AddDiscordGateway(options =>
         {
             options.Intents = GatewayIntents.GuildMessages | GatewayIntents.MessageContent;
-        });
+        }).AddGatewayHandlers(typeof(Bot).Assembly);
         
         var host = builder.Build();
         
         await host.RunAsync();
+
+        Leveller.Init();
     }
 } 
