@@ -1,4 +1,5 @@
 ﻿using Dahlia.Leveling;
+using Dahlia.Mentioning;
 using Microsoft.Extensions.Hosting;
 using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
@@ -18,8 +19,9 @@ static class Bot
         
         var host = builder.Build();
         
-        await host.RunAsync();
-
         Leveller.Init();
+        DetectTone.Init();
+
+        await host.RunAsync();
     }
 } 

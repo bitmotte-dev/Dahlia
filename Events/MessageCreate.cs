@@ -1,4 +1,5 @@
 using Dahlia.Leveling;
+using Dahlia.Mentioning;
 using Dahlia.Utilities;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +17,8 @@ public class MessageCreateHandler(RestClient client, ILogger<MessageCreateHandle
         if(!message.Author.IsBot)
         {
             Leveller.ManageUser(client, message.Author.Id);
+
+            SendMessage.Send(client, message.ChannelId, DetectTone.Predict(message.Content));
         }
         return default;
     }
